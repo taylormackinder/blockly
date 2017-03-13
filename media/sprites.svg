@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="96px" height="124px">
   <style type="text/css">
 #background {
-  fill: none;
+  fill: rgb(217, 110, 77);
 }
 .arrows {
   fill: #000;
@@ -18,7 +18,7 @@
   text-anchor: middle;
 }
 .trash {
-  fill: #888;
+  fill: white;
 }
 .zoom {
   fill: none;
@@ -47,9 +47,9 @@
   <text class="checkmark" x="55.5" y="28">&#10003;</text>
 
   <g class="trash">
-    <path d="M 2,41 v 6 h 42 v -6 h -10.5 l -3,-3 h -15 l -3,3 z" />
-    <rect width="36" height="20" x="5" y="50" />
-    <rect width="36" height="42" x="5" y="50" rx="4" ry="4" />
+    <path d="M 2,41 v 6 h 42 v -6 h -10.5 l -3,-3 h -15 l -3,3 z"/>
+    <rect width="36" height="20" x="5" y="50"/>
+    <rect width="36" height="42" x="5" y="50" rx="4" ry="4"/>
   </g>
 
   <g class="zoom">

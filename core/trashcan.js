@@ -180,7 +180,7 @@ Blockly.Trashcan.prototype.createDom = function() {
        'clip-path': 'url(#blocklyTrashBodyClipPath' + rnd + ')'},
       this.svgGroup_);
   body.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      this.workspace_.options.pathToMedia + Blockly.SPRITE.url);
+      this.workspace_.options.pathToMedia + 'sprites.svg'); //Blockly.SPRITE.url
 
   var clip = Blockly.utils.createSvgElement('clipPath',
       {'id': 'blocklyTrashLidClipPath' + rnd},
@@ -193,7 +193,7 @@ Blockly.Trashcan.prototype.createDom = function() {
        'clip-path': 'url(#blocklyTrashLidClipPath' + rnd + ')'},
       this.svgGroup_);
   this.svgLid_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      this.workspace_.options.pathToMedia + Blockly.SPRITE.url);
+      this.workspace_.options.pathToMedia + 'sprites.svg'); //Blockly.SPRITE.url
 
   Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup', this, this.click);
   this.animateLid_();
@@ -244,14 +244,13 @@ Blockly.Trashcan.prototype.position = function() {
     }
   } else {
     this.left_ = metrics.viewWidth + metrics.absoluteLeft -
-        this.WIDTH_ - this.MARGIN_SIDE_ - Blockly.Scrollbar.scrollbarThickness;
+        this.WIDTH_ - Blockly.Scrollbar.scrollbarThickness - 10;
 
     if (metrics.toolboxPosition == Blockly.TOOLBOX_AT_RIGHT) {
       this.left_ -= metrics.flyoutWidth;
     }
   }
-  this.top_ = metrics.viewHeight + metrics.absoluteTop -
-      (this.BODY_HEIGHT_ + this.LID_HEIGHT_) - this.bottom_;
+  this.top_ = metrics.absoluteTop + 132;
 
   if (metrics.toolboxPosition == Blockly.TOOLBOX_AT_BOTTOM) {
     this.top_ -= metrics.flyoutHeight;
@@ -304,8 +303,8 @@ Blockly.Trashcan.prototype.animateLid_ = function() {
       (this.workspace_.RTL ? -lidAngle : lidAngle) + ',' +
       (this.workspace_.RTL ? 4 : this.WIDTH_ - 4) + ',' +
       (this.LID_HEIGHT_ - 2) + ')');
-  var opacity = goog.math.lerp(0.4, 0.8, this.lidOpen_);
-  this.svgGroup_.style.opacity = opacity;
+  //var opacity = goog.math.lerp(0.4, 0.8, this.lidOpen_);
+  this.svgGroup_.style.opacity = 1; //opacity removes the toggle
   if (this.lidOpen_ > 0 && this.lidOpen_ < 1) {
     this.lidTask_ = goog.Timer.callOnce(this.animateLid_, 20, this);
   }
