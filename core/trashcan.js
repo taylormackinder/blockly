@@ -46,14 +46,14 @@ Blockly.Trashcan = function(workspace) {
  * @type {number}
  * @private
  */
-Blockly.Trashcan.prototype.WIDTH_ = 47;
+Blockly.Trashcan.prototype.WIDTH_ = 50;
 
 /**
  * Height of the trashcan image (minus lid).
  * @type {number}
  * @private
  */
-Blockly.Trashcan.prototype.BODY_HEIGHT_ = 44;
+Blockly.Trashcan.prototype.BODY_HEIGHT_ = 50;
 
 /**
  * Height of the lid image.
@@ -146,6 +146,14 @@ Blockly.Trashcan.prototype.left_ = 0;
 Blockly.Trashcan.prototype.top_ = 0;
 
 /**
+ * PathToMedia
+ * @type {url}
+ * @private
+ * this.workspace_.options.pathToMedia
+ */
+Blockly.Trashcan.prototype.pathToMedia = '/public/';
+
+/**
  * Create the trash can elements.
  * @return {!Element} The trash can's SVG group.
  */
@@ -172,31 +180,31 @@ Blockly.Trashcan.prototype.createDom = function() {
       this.svgGroup_);
   Blockly.utils.createSvgElement('rect',
       {'width': this.WIDTH_, 'height': this.BODY_HEIGHT_,
-       'y': this.LID_HEIGHT_},
+       'y': 40, 'x':15},//this.LID_HEIGHT_},
       clip);
   var body = Blockly.utils.createSvgElement('image',
-      {'width': Blockly.SPRITE.width, 'x': -this.SPRITE_LEFT_,
-       'height': Blockly.SPRITE.height, 'y': -this.SPRITE_TOP_,
+      {'width': Blockly.SPRITE.width, 'x': -30,//-this.SPRITE_LEFT_,
+       'height': Blockly.SPRITE.height, 'y': 0,//this.SPRITE_TOP_,
        'clip-path': 'url(#blocklyTrashBodyClipPath' + rnd + ')'},
       this.svgGroup_);
   body.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      this.workspace_.options.pathToMedia + 'sprites.svg'); //Blockly.SPRITE.url
+      Blockly.Trashcan.prototype.pathToMedia + 'sprites.svg'); //Blockly.SPRITE.url
 
-  var clip = Blockly.utils.createSvgElement('clipPath',
-      {'id': 'blocklyTrashLidClipPath' + rnd},
-      this.svgGroup_);
-  Blockly.utils.createSvgElement('rect',
-      {'width': this.WIDTH_, 'height': this.LID_HEIGHT_}, clip);
-  this.svgLid_ = Blockly.utils.createSvgElement('image',
-      {'width': Blockly.SPRITE.width, 'x': -this.SPRITE_LEFT_,
-       'height': Blockly.SPRITE.height, 'y': -this.SPRITE_TOP_,
-       'clip-path': 'url(#blocklyTrashLidClipPath' + rnd + ')'},
-      this.svgGroup_);
-  this.svgLid_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      this.workspace_.options.pathToMedia + 'sprites.svg'); //Blockly.SPRITE.url
+  // var clip = Blockly.utils.createSvgElement('clipPath',
+  //     {'id': 'blocklyTrashLidClipPath' + rnd},
+  //     this.svgGroup_);
+  // // Blockly.utils.createSvgElement('rect',
+  // //     {'width': this.WIDTH_, 'height': this.LID_HEIGHT_}, clip);
+  // this.svgLid_ = Blockly.utils.createSvgElement('image',
+  //     {'width': Blockly.SPRITE.width, 'x': -this.SPRITE_LEFT_,
+  //      'height': Blockly.SPRITE.height, 'y': -this.SPRITE_TOP_,
+  //      'clip-path': 'url(#blocklyTrashLidClipPath' + rnd + ')'},
+  //     this.svgGroup_);
+  // this.svgLid_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
+  //     this.workspace_.options.pathToMedia + 'sprites.svg'); //Blockly.SPRITE.url
 
   Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup', this, this.click);
-  this.animateLid_();
+  // this.animateLid_();
   return this.svgGroup_;
 };
 
@@ -250,7 +258,7 @@ Blockly.Trashcan.prototype.position = function() {
       this.left_ -= metrics.flyoutWidth;
     }
   }
-  this.top_ = metrics.absoluteTop + 132;
+  this.top_ = metrics.absoluteTop + 98;
 
   if (metrics.toolboxPosition == Blockly.TOOLBOX_AT_BOTTOM) {
     this.top_ -= metrics.flyoutHeight;
@@ -269,11 +277,12 @@ Blockly.Trashcan.prototype.getClientRect = function() {
   }
 
   var trashRect = this.svgGroup_.getBoundingClientRect();
-  var left = trashRect.left + this.SPRITE_LEFT_ - this.MARGIN_HOTSPOT_;
-  var top = trashRect.top + this.SPRITE_TOP_ - this.MARGIN_HOTSPOT_;
+  console.log(trashRect);
+  //var left = trashRect.left + this.SPRITE_LEFT_ - this.MARGIN_HOTSPOT_;
+  //var top = trashRect.top + this.SPRITE_TOP_ - this.MARGIN_HOTSPOT_;
   var width = this.WIDTH_ + 2 * this.MARGIN_HOTSPOT_;
   var height = this.LID_HEIGHT_ + this.BODY_HEIGHT_ + 2 * this.MARGIN_HOTSPOT_;
-  return new goog.math.Rect(left, top, width, height);
+  return new goog.math.Rect(trashRect.left, trashRect.top, width, height);//new goog.math.Rect(left, top, width, height);
 
 };
 
@@ -295,20 +304,20 @@ Blockly.Trashcan.prototype.setOpen_ = function(state) {
  * Rotate the lid open or closed by one step.  Then wait and recurse.
  * @private
  */
-Blockly.Trashcan.prototype.animateLid_ = function() {
-  this.lidOpen_ += this.isOpen ? 0.2 : -0.2;
-  this.lidOpen_ = goog.math.clamp(this.lidOpen_, 0, 1);
-  var lidAngle = this.lidOpen_ * 45;
-  this.svgLid_.setAttribute('transform', 'rotate(' +
-      (this.workspace_.RTL ? -lidAngle : lidAngle) + ',' +
-      (this.workspace_.RTL ? 4 : this.WIDTH_ - 4) + ',' +
-      (this.LID_HEIGHT_ - 2) + ')');
-  //var opacity = goog.math.lerp(0.4, 0.8, this.lidOpen_);
-  this.svgGroup_.style.opacity = 1; //opacity removes the toggle
-  if (this.lidOpen_ > 0 && this.lidOpen_ < 1) {
-    this.lidTask_ = goog.Timer.callOnce(this.animateLid_, 20, this);
-  }
-};
+// Blockly.Trashcan.prototype.animateLid_ = function() {
+//   this.lidOpen_ += this.isOpen ? 0.2 : -0.2;
+//   this.lidOpen_ = goog.math.clamp(this.lidOpen_, 0, 1);
+//   var lidAngle = this.lidOpen_ * 45;
+//   this.svgLid_.setAttribute('transform', 'rotate(' +
+//       (this.workspace_.RTL ? -lidAngle : lidAngle) + ',' +
+//       (this.workspace_.RTL ? 4 : this.WIDTH_ - 4) + ',' +
+//       (this.LID_HEIGHT_ - 2) + ')');
+//   //var opacity = goog.math.lerp(0.4, 0.8, this.lidOpen_);
+//   this.svgGroup_.style.opacity = 1; //opacity removes the toggle
+//   if (this.lidOpen_ > 0 && this.lidOpen_ < 1) {
+//     this.lidTask_ = goog.Timer.callOnce(this.animateLid_, 20, this);
+//   }
+// };
 
 /**
  * Flip the lid shut.

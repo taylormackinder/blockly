@@ -406,15 +406,15 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyZoom>image {',
-    'opacity: .4;',
+    'opacity: 1;',
   '}',
 
   '.blocklyZoom>image:hover {',
-    'opacity: .6;',
+    'opacity: 1;',
   '}',
 
   '.blocklyZoom>image:active {',
-    'opacity: .8;',
+    'opacity: 1;',
   '}',
 
   /* Darken flyout scrollbars due to being on a grey background. */
